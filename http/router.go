@@ -1,8 +1,9 @@
 package http
 
 import (
-	"github.com/gorilla/mux"
 	"log"
+
+	"github.com/gorilla/mux"
 )
 
 // NewRouter creates a new Router and initialises it will all of the global generateRoutes
