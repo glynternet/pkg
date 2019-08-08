@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	ghttp "github.com/glynternet/pkg/http"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -41,7 +42,7 @@ func TestWithAuthoriser(t *testing.T) {
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "http://any/", nil)
 
-		hf := router.WithAuthoriser(logger, &ra, &next)
+		hf := ghttp.WithAuthoriser(logger, &ra, &next)
 		hf(w, r)
 		assert.Equal(t, r, ra.request)
 		assert.Equal(t, http.StatusUnauthorized, w.Code)
@@ -55,7 +56,7 @@ func TestWithAuthoriser(t *testing.T) {
 		logger := log.New(&buf, "", 0)
 		var ra mockRequestAuthoriser
 		next := mockHandler{}
-		hf := router.WithAuthoriser(logger, &ra, &next)
+		hf := ghttp.WithAuthoriser(logger, &ra, &next)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "http://any/", nil)
