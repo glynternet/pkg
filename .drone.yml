@@ -1,9 +1,7 @@
-# dubplate version: v0.0.7
-
 workspace:
 
   base: /go
-  path: src/github.com/glynternet/nextactions
+  path: src/github.com/glynternet/pkg
 
 
 pipeline:
