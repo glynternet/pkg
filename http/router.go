@@ -7,14 +7,14 @@ import (
 )
 
 // NewRouter creates a new Router and initialises it will all of the global generateRoutes
-func NewRouter(rs []route, log *log.Logger) (*mux.Router, error) {
+func NewRouter(rs []Route, log *log.Logger) (*mux.Router, error) {
 	router := mux.NewRouter().StrictSlash(true)
 	for _, route := range rs {
-		handler := Logger(log, route.appHandler, route.name)
+		handler := Logger(log, route.AppHandler, route.Name)
 		router.
-			Methods(route.method).
-			Path(route.pattern).
-			Name(route.name).
+			Methods(route.Method).
+			Path(route.Pattern).
+			Name(route.Name).
 			Handler(handler)
 		log.Printf("Route registered: %+v", route)
 	}
