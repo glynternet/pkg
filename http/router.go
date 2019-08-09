@@ -10,7 +10,7 @@ import (
 func NewRouter(rs []Route, log *log.Logger) (*mux.Router, error) {
 	router := mux.NewRouter().StrictSlash(true)
 	for _, route := range rs {
-		handler := Logger(log, route.AppHandler, route.Name)
+		handler := LoggingHandler(log, route.AppHandler, route.Name)
 		router.
 			Methods(route.Method).
 			Path(route.Pattern).
