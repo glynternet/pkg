@@ -17,4 +17,4 @@ pipeline:
     image: glynhanmer/go-linters:1.10.3-alpine3.7-v0.2.0
     environment:
       - CONCURRENCY=1
-
+      - GO_GET=1
