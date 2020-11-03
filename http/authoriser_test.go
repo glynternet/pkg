@@ -1,14 +1,13 @@
 package http_test
 
 import (
-	"bytes"
 	"errors"
-	"log"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
 	ghttp "github.com/glynternet/pkg/http"
+	"github.com/glynternet/pkg/log"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -34,35 +33,43 @@ func (h *mockHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 func TestWithAuthoriser(t *testing.T) {
 	t.Run("unauthorised", func(t *testing.T) {
-		var buf bytes.Buffer
-		logger := log.New(&buf, "", 0)
 		var next mockHandler
-		ra := mockRequestAuthoriser{err: errors.New("auth error")}
+		err := errors.New("auth error")
+		ra := mockRequestAuthoriser{err: err}
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "http://any/", nil)
 
-		hf := ghttp.WithAuthoriser(logger, &ra, &next)
+		logger := mockLogger{}
+		hf := ghttp.WithAuthoriser(&logger, &ra, &next)
 		hf(w, r)
 		assert.Equal(t, r, ra.request)
 		assert.Equal(t, http.StatusUnauthorized, w.Code)
-		assert.Equal(t, "Unauthorised request: auth error\n", buf.String())
+		assert.Len(t, logger, 2)
+		assert.Equal(t, log.Message("Unauthorised request"), logger[0])
+		assert.Equal(t, log.Error(err), logger[1])
 		assert.Nil(t, next.writer)
 		assert.Nil(t, next.request)
 	})
 
 	t.Run("authorised", func(t *testing.T) {
-		var buf bytes.Buffer
-		logger := log.New(&buf, "", 0)
+		logger := mockLogger{}
 		var ra mockRequestAuthoriser
 		next := mockHandler{}
-		hf := ghttp.WithAuthoriser(logger, &ra, &next)
+		hf := ghttp.WithAuthoriser(&logger, &ra, &next)
 
 		w := httptest.NewRecorder()
 		r := httptest.NewRequest(http.MethodGet, "http://any/", nil)
 		hf(w, r)
+		assert.Len(t, logger, 0)
 		assert.Equal(t, w, next.writer)
 		assert.Equal(t, r, next.request)
-		assert.Empty(t, buf)
 	})
+}
+
+type mockLogger []log.KV
+
+func (m *mockLogger) Log(kv ...log.KV) error {
+	*m = append(*m, kv...)
+	return nil
 }

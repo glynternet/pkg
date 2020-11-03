@@ -24,6 +24,7 @@ func (ah AppJSONHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	// handle errors
 	if err != nil {
+		// TODO(glynternet): replace "log" with "glynternet/pkg/log", perhaps return error from this func and refactor
 		log.Printf(
 			"error serving on AppJSONHandler %v. Error: %v - Status: %d (%s) - Request: %+v",
 			ah, err, status, http.StatusText(status), r,

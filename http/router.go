@@ -1,22 +1,25 @@
 package http
 
 import (
-	"log"
+	"github.com/glynternet/pkg/log"
 
 	"github.com/gorilla/mux"
 )
 
 // NewRouter creates a new Router and initialises it will all of the global generateRoutes
-func NewRouter(rs []Route, log *log.Logger) (*mux.Router, error) {
+func NewRouter(rs []Route, logger log.Logger) (*mux.Router, error) {
 	router := mux.NewRouter().StrictSlash(true)
 	for _, route := range rs {
-		handler := LoggingHandler(log, route.AppHandler, route.Name)
+		handler := LoggingHandler(logger, route.AppHandler, route.Name)
 		router.
 			Methods(route.Method).
 			Path(route.Pattern).
 			Name(route.Name).
 			Handler(handler)
-		log.Printf("Route registered: %+v", route)
+		logger.Log(log.Message("Route registered"), log.KV{
+			K: "route",
+			V: route,
+		})
 	}
 	return router, nil
 }
