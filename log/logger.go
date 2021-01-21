@@ -1,18 +1,18 @@
 package log
 
 import (
-	"os"
+	"io"
 
 	"github.com/go-kit/kit/log"
 	"github.com/go-kit/kit/log/level"
 )
 
-func NewLogger() Logger {
+func NewLogger(w io.Writer) Logger {
 	return logger{
 		Logger: log.With(
-			level.NewFilter(log.NewJSONLogger(os.Stderr), level.AllowDebug()),
+			level.NewFilter(log.NewJSONLogger(w), level.AllowDebug()),
 			"ts", log.DefaultTimestampUTC,
-			"caller", log.DefaultCaller),
+			"caller", log.Caller(4)),
 	}
 }
 
