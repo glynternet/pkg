@@ -17,7 +17,7 @@ func WithAuthoriser(logger log.Logger, ra RequestAuthoriser, next http.Handler) 
 			if logger != nil {
 				_ = logger.Log(
 					log.Message("Unauthorised request"),
-					log.Error(err))
+					log.ErrorMessage(err))
 			}
 			return
 		}

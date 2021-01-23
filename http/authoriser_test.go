@@ -47,7 +47,7 @@ func TestWithAuthoriser(t *testing.T) {
 		assert.Equal(t, http.StatusUnauthorized, w.Code)
 		assert.Len(t, logger, 2)
 		assert.Equal(t, log.Message("Unauthorised request"), logger[0])
-		assert.Equal(t, log.Error(err), logger[1])
+		assert.Equal(t, log.ErrorMessage(err), logger[1])
 		assert.Nil(t, next.writer)
 		assert.Nil(t, next.request)
 	})
