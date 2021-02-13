@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"fmt"
 	"io"
 
 	"github.com/spf13/cobra"
@@ -11,7 +10,7 @@ import (
 func NewBashCompletion(root *cobra.Command, w io.Writer) *cobra.Command {
 	return &cobra.Command{
 		Use:   "completion",
-		Short: fmt.Sprintf("generate a bash completion script"),
+		Short: "generate a bash completion script",
 		RunE: func(_ *cobra.Command, _ []string) error {
 			return root.GenBashCompletion(w)
 		},
